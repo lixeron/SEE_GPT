@@ -1,0 +1,5 @@
+#For Secret create .env file
+# Add OpenAI API key in there named it like OPENAI_API_KEY = your API key
+
+#openai>=1.0.0
+#python-dotenv
