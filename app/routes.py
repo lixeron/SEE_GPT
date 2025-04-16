@@ -3,6 +3,7 @@ from flask import render_template, redirect, request, session, url_for
 from app import app
 from phishing_gpt import generate_phishing
 from logger import log_result
+from email_utils import send_email
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -75,3 +76,18 @@ def stats():
         pass
 
     return render_template("stats.html", safe=safe, unsafe=unsafe, neutral=neutral)
+
+
+@app.route("/send-email", methods=["GET", "POST"])
+def send_email_route():
+    if request.method == "POST":
+        to_email = request.form.get("email")
+        topic = request.form.get("topic")
+        tone = request.form.get("tone")
+
+        email_body = generate_phishing(topic, tone)
+        send_email(to_email, f"[Phishing Simulation] Urgent {topic.title()} Message", email_body)
+
+        return render_template("email_sent.html", email=email_body, recipient=to_email)
+
+    return render_template("send_email.html")
