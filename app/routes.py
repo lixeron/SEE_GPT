@@ -1,3 +1,4 @@
+import csv
 from flask import render_template, redirect, request, session, url_for
 from app import app
 from phishing_gpt import generate_phishing
@@ -56,4 +57,21 @@ def respond():
 
 @app.route("/stats")
 def stats():
-    return render_template("stats.html")
+    safe = unsafe = neutral = 0
+
+    try:
+        with open("logs/results.csv", newline='') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                outcome = row["Outcome"].lower()
+                if "unsafe" in outcome:
+                    unsafe += 1
+                elif "safe" in outcome:
+                    safe += 1
+                elif "neutral" in outcome:
+                    neutral += 1
+
+    except FileNotFoundError:
+        pass
+
+    return render_template("stats.html", safe=safe, unsafe=unsafe, neutral=neutral)
