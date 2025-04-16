@@ -1,6 +1,7 @@
 from phishing_gpt import generate_phishing
 from interaction import get_user_response, get_mock_feedback
 from logger import log_result
+from analyze import summarize_results
 
 def main():
     print("Welcome to SEE-GPT: Social Engineering Awareness Engine")
@@ -30,6 +31,7 @@ def main():
         
     log_result(topic, tone, user_choice, outcome)
     print("\n Your response has been logged. Thank you for training safely!")
-
+    summarize_results()
+    
 if __name__ == "__main__":
     main()
